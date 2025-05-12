@@ -6,14 +6,29 @@ on:
     types: [labeled]
 
 jobs:
-  call-general-workflow:
-    if: |
-      github.event.label.name == 'Core Contributor assignee'
-    uses: ChrisChV-Sandbox-Organization/.github/workflows/add-to-cc-board.yml@main
-    with:
-      item_number: ${{ github.event.issue.number || github.event.pull_request.number }}
-      board_name: cc-edx-platform
-      repo_name: ${{ github.repository }}
-      item_type: ${{ github.event.issue ? 'issue' : 'pull_request' }}
-    secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+  add-to-cc-board:
+    if: github.event.label.name == 'Core Contributor assignee'
+    runs-on: ubuntu-latest
+
+    outputs:
+      item_type: ${{ steps.set-type.outputs.item_type }}
+
+    steps:
+      - name: Set item type
+        id: set-type
+        run: |
+          if [ "${{ github.event.issue.number }}" != "" ]; then
+            echo "item_type=issue" >> $GITHUB_OUTPUT
+          else
+            echo "item_type=pull_request" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Call reusable workflow
+        uses: ChrisChV-Sandbox-Organization/.github/workflows/add-to-cc-board.yml@main
+        with:
+          item_number: ${{ github.event.issue.number || github.event.pull_request.number }}
+          board_name: cc-edx-platform
+          repo_name: ${{ github.repository }}
+          item_type: ${{ steps.set-type.outputs.item_type }}
+        secrets:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
