@@ -6,27 +6,32 @@ on:
     types: [labeled]
 
 jobs:
-  add-to-cc-board:
+  set-item-data:
     if: github.event.label.name == 'Core Contributor assignee'
     runs-on: ubuntu-latest
-
     outputs:
       item_type: ${{ steps.set-type.outputs.item_type }}
-
+      item_number: ${{ steps.set-type.outputs.item_number }}
     steps:
-      - name: Set item type
+      - name: Set item type and number
         id: set-type
         run: |
-          if [ "${{ github.event.issue.number }}" != "" ]; then
+          if [[ "${{ github.event.issue.number }}" != "" ]]; then
             echo "item_type=issue" >> $GITHUB_OUTPUT
+            echo "item_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
           else
             echo "item_type=pull_request" >> $GITHUB_OUTPUT
+            echo "item_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Call reusable workflow
-        uses: ChrisChV-Sandbox-Organization/.github/.github/workflows/add-to-cc-board.yml@main
-        with:
-          item_number: ${{ github.event.issue.number || github.event.pull_request.number }}
-          board_name: cc-edx-platform
-          repo_name: ${{ github.repository }}
-          item_type: ${{ steps.set-type.outputs.item_type }}
+  add-to-cc-board:
+    needs: set-item-data
+    if: github.event.label.name == 'Core Contributor assignee'
+    uses: ChrisChV-Sandbox-Organization/.github/.github/workflows/add-to-cc-board.yml@main
+    with:
+      item_number: ${{ needs.prepare.outputs.item_number }}
+      board_name: cc-edx-platform
+      repo_name: ${{ github.repository }}
+      item_type: ${{ needs.prepare.outputs.item_type }}
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
