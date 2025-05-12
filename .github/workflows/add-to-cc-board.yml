@@ -22,7 +22,7 @@ jobs:
           fi
 
   add-to-cc-board:
-    needs: set-item-data
+    needs: set-item-url
     if: github.event.label.name == 'Core Contributor assignee'
     uses: ChrisChV-Sandbox-Organization/.github/.github/workflows/add-to-cc-board.yml@main
     with:
