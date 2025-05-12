@@ -1,0 +1,19 @@
+name: Trigger add to board
+on:
+  issues:
+    types: [labeled]
+  pull_request:
+    types: [labeled]
+
+jobs:
+  call-general-workflow:
+    if: |
+      github.event.label.name == 'Core Contributor assignee'
+    uses: ChrisChV-Sandbox-Organization/.github/workflows/add-to-cc-board.yml@main
+    with:
+      item_number: ${{ github.event.issue.number || github.event.pull_request.number }}
+      board_name: cc-edx-platform
+      repo_name: ${{ github.repository }}
+      item_type: ${{ github.event.issue ? 'issue' : 'pull_request' }}
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
