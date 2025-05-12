@@ -33,5 +33,3 @@ jobs:
       board_name: cc-edx-platform
       repo_name: ${{ github.repository }}
       item_type: ${{ needs.prepare.outputs.item_type }}
-    secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
