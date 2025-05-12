@@ -29,7 +29,7 @@ jobs:
     if: github.event.label.name == 'Core Contributor assignee'
     uses: ChrisChV-Sandbox-Organization/.github/.github/workflows/add-to-cc-board.yml@main
     with:
-      item_number: ${{ needs.prepare.outputs.item_number }}
+      item_number: ${{ needs.set-item-data.outputs.item_number }}
       board_name: cc-edx-platform
       repo_name: ${{ github.repository }}
-      item_type: ${{ needs.prepare.outputs.item_type }}
+      item_type: ${{ needs.set-item-data.outputs.item_type }}
