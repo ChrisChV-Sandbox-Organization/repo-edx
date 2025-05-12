@@ -6,7 +6,7 @@ on:
     types: [labeled]
 
 jobs:
-  set-item-data:
+  set-item-url:
     if: github.event.label.name == 'Core Contributor assignee'
     runs-on: ubuntu-latest
     outputs:
