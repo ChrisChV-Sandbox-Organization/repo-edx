@@ -29,3 +29,5 @@ jobs:
       board_name: cc-edx-platform
       repo_name: ${{ github.repository }}
       item_url: ${{ needs.set-item-url.outputs.item_url }}
+    secrets:
+      projects_access_token: ${{ secrets.PROJECTS_TOKEN }}
