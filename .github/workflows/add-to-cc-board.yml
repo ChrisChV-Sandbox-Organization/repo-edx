@@ -1,4 +1,4 @@
-name: Trigger add to board
+name: Trigger to add Issue or PR to a Core Contributor project board
 on:
   issues:
     types: [labeled]
