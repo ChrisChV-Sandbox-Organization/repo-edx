@@ -11,3 +11,5 @@ jobs:
     uses: ChrisChV-Sandbox-Organization/.github/.github/workflows/add-to-cc-board.yml@main
     with:
       board_name: cc-edx-platform
+    secrets:
+      projects_access_token: ${{ secrets.PROJECTS_TOKEN }}
