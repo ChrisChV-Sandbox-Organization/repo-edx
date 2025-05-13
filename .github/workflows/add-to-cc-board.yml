@@ -6,28 +6,11 @@ on:
     types: [labeled]
 
 jobs:
-  set-item-url:
-    if: github.event.label.name == 'Core Contributor assignee'
-    runs-on: ubuntu-latest
-    outputs:
-      item_url: ${{ steps.set-item-url.outputs.item_url }}
-    steps:
-      - name: Set item URL
-        id: set-item-url
-        run: |
-          if [[ "${{ github.event.issue.html_url }}" != "" ]]; then
-            echo "item_url=${{ github.event.issue.html_url }}" >> $GITHUB_OUTPUT
-          else
-            echo "item_url=${{ github.event.pull_request.html_url }}" >> $GITHUB_OUTPUT
-          fi
-
   add-to-cc-board:
     needs: set-item-url
     if: github.event.label.name == 'Core Contributor assignee'
     uses: ChrisChV-Sandbox-Organization/.github/.github/workflows/add-to-cc-board.yml@main
     with:
       board_name: cc-edx-platform
-      repo_name: ${{ github.repository }}
-      item_url: ${{ needs.set-item-url.outputs.item_url }}
     secrets:
       projects_access_token: ${{ secrets.PROJECTS_TOKEN }}
